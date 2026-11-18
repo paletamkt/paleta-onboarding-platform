@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paleta — Onboarding</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body class="login-page">
+
+  <div class="login-wrap">
+
+    <div class="login-logos">
+      <img src="/assets/logo-food.png" alt="Paleta Food" />
+      <div class="login-logos-divider"></div>
+      <img src="/assets/logo-mkt.png" alt="Paleta Mkt" />
+    </div>
+
+    <div class="login-card">
+      <h1>Bem-vindo ao seu onboarding</h1>
+      <p class="login-sub">Acompanhe cada etapa da sua entrada na Paleta.</p>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email"/>
+        </div>
+        <div class="field">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" placeholder="••••••••" required autocomplete="current-password"/>
+        </div>
+        <div id="loginError" class="error-msg hidden"></div>
+        <button type="submit" class="btn-primary" id="btnLogin" style="width:100%">Entrar</button>
+      </form>
+    </div>
+
+    <p class="login-footer">Plataforma exclusiva Grupo Paleta</p>
+  </div>
+
+  <script type="module" src="/js/auth.js"></script>
+</body>
+</html>

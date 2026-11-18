@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CS — Paleta Onboarding</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body class="editor-page">
+
+  <header class="top-bar">
+    <div class="top-brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">paleta</span>
+      <span class="editor-badge" style="background:var(--azul-soft);color:var(--azul)">CS</span>
+    </div>
+    <div class="top-right">
+      <span id="nomeCS" class="cliente-nome"></span>
+      <button id="btnSair" class="btn-sair">Sair</button>
+    </div>
+  </header>
+
+  <main class="editor-main">
+
+    <!-- Lista de clientes -->
+    <div id="viewLista" class="view">
+      <div class="editor-section-header">
+        <h1>Onboardings</h1>
+        <p class="section-sub">Marque as tarefas conforme forem concluídas</p>
+      </div>
+      <div id="clientesGrid" class="clientes-grid"></div>
+      <div id="loadingLista" class="loading-state">
+        <div class="spinner"></div><p>Carregando...</p>
+      </div>
+      <div id="emptyLista" class="empty-state hidden">
+        <p>Nenhum cliente cadastrado ainda.</p>
+      </div>
+    </div>
+
+    <!-- Detalhe de um cliente -->
+    <div id="viewDetalhe" class="view hidden">
+      <div class="editor-section-header">
+        <button id="btnVoltar" class="btn-voltar">← Onboardings</button>
+        <div class="detalhe-header-info">
+          <div>
+            <p class="eyebrow" id="detalheTipo"></p>
+            <h1 id="detalheNome"></h1>
+          </div>
+          <div class="detalhe-acoes">
+            <div class="progresso-geral compact">
+              <div class="progresso-numero" id="detalheProgresso">0%</div>
+              <div class="progresso-bar-wrap">
+                <div class="progresso-bar-fill" id="detalheProgressoBar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="resumoResponsavel" class="resumo-responsavel"></div>
+      <div id="etapasCSWrap" class="etapas-wrap editor-mode"></div>
+    </div>
+
+  </main>
+
+  <footer class="rodape">Plataforma exclusiva Grupo Paleta</footer>
+
+  <script type="module" src="/js/cs.js"></script>
+</body>
+</html>

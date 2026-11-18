@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Editores ───────────────────────────────────────────
+    match /editores/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // ─── CS ─────────────────────────────────────────────────
+    match /cs/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // ─── Clientes ───────────────────────────────────────────
+    match /clientes/{uid} {
+      allow read: if request.auth != null &&
+        (isEditor(request.auth.uid) ||
+         isCS(request.auth.uid) ||
+         request.auth.uid == uid);
+      allow write: if request.auth != null && isEditor(request.auth.uid);
+
+      // Etapas
+      match /etapas/{etapaId} {
+        allow read: if request.auth != null &&
+          (request.auth.uid == uid ||
+           isEditor(request.auth.uid) ||
+           isCS(request.auth.uid));
+        allow write: if request.auth != null && isEditor(request.auth.uid);
+
+        // Tarefas
+        match /tarefas/{tarefaId} {
+          allow read: if request.auth != null &&
+            (request.auth.uid == uid ||
+             isEditor(request.auth.uid) ||
+             isCS(request.auth.uid));
+          // CS pode marcar tarefas como concluídas
+          allow write: if request.auth != null &&
+            (isEditor(request.auth.uid) || isCS(request.auth.uid));
+        }
+      }
+
+      // Usuários adicionais
+      match /usuarios/{usuarioId} {
+        allow read, write: if request.auth != null && isEditor(request.auth.uid);
+      }
+
+      // Logs — CS também pode escrever
+      match /logs/{logId} {
+        allow read: if request.auth != null &&
+          (request.auth.uid == uid ||
+           isEditor(request.auth.uid) ||
+           isCS(request.auth.uid));
+        allow write: if request.auth != null &&
+          (isEditor(request.auth.uid) || isCS(request.auth.uid));
+      }
+    }
+
+    // ─── Funções auxiliares ─────────────────────────────────
+    function isEditor(uid) {
+      return exists(/databases/$(database)/documents/editores/$(uid));
+    }
+
+    function isCS(uid) {
+      return exists(/databases/$(database)/documents/cs/$(uid));
+    }
+  }
+}

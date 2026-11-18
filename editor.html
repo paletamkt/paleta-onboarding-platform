@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editor — Paleta Onboarding</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body class="editor-page">
+
+  <header class="top-bar">
+    <div class="top-brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">paleta</span>
+      <span class="editor-badge">editor</span>
+    </div>
+    <div class="top-right">
+      <button id="btnNovoCliente" class="btn-primary">+ Novo cliente</button>
+      <button id="btnSair" class="btn-sair">Sair</button>
+    </div>
+  </header>
+
+  <main class="editor-main">
+
+    <!-- Lista -->
+    <div id="viewLista" class="view">
+      <div class="editor-section-header">
+        <h1>Clientes</h1>
+        <p class="section-sub">Gerencie os onboardings ativos</p>
+      </div>
+      <div id="clientesGrid" class="clientes-grid"></div>
+      <div id="loadingLista" class="loading-state">
+        <div class="spinner"></div><p>Carregando...</p>
+      </div>
+      <div id="emptyLista" class="empty-state hidden">
+        <p>Nenhum cliente cadastrado ainda.</p>
+        <button class="btn-primary" onclick="abrirModal('modalNovoCliente')">+ Adicionar primeiro cliente</button>
+      </div>
+    </div>
+
+    <!-- Detalhe -->
+    <div id="viewDetalhe" class="view hidden">
+      <div class="editor-section-header">
+        <button id="btnVoltar" class="btn-voltar">← Clientes</button>
+        <div class="detalhe-header-info">
+          <div>
+            <p class="eyebrow" id="detalheTipo"></p>
+            <h1 id="detalheNome"></h1>
+          </div>
+          <div class="detalhe-acoes">
+            <div class="progresso-geral compact">
+              <div class="progresso-numero" id="detalheProgresso">0%</div>
+              <div class="progresso-bar-wrap">
+                <div class="progresso-bar-fill" id="detalheProgressoBar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info bar -->
+      <div class="onboarding-info-bar">
+        <div class="info-bar-item">
+          <div class="info-bar-label">Status</div>
+          <select id="infoStatus" class="info-bar-select">
+            <option value="nao_iniciado">Não iniciado</option>
+            <option value="em_andamento">Em andamento</option>
+            <option value="aguardando_cliente">Aguardando cliente</option>
+            <option value="em_revisao">Em revisão</option>
+            <option value="concluido">Concluído</option>
+            <option value="atrasado">Atrasado</option>
+          </select>
+        </div>
+        <div class="info-bar-item">
+          <div class="info-bar-label">Início</div>
+          <input type="date" id="infoDataInicio" class="info-bar-select" style="font-family:var(--font-display);font-size:13px"/>
+        </div>
+        <div class="info-bar-item">
+          <div class="info-bar-label">Previsão</div>
+          <input type="date" id="infoDataPrevisao" class="info-bar-select" style="font-family:var(--font-display);font-size:13px"/>
+        </div>
+        <div class="info-bar-item">
+          <div class="info-bar-label">Dias</div>
+          <div class="info-bar-valor" id="infoDias">—</div>
+        </div>
+        <button id="btnSalvarInfo" class="btn-secondary" style="align-self:flex-end;font-size:12px;padding:7px 14px">Salvar</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs-bar">
+        <button class="tab-btn active" data-tab="tabEtapas">Etapas e tarefas</button>
+        <button class="tab-btn" data-tab="tabLogs">Histórico</button>
+        <button class="tab-btn" data-tab="tabUsuarios">Usuários</button>
+      </div>
+
+      <!-- Tab Etapas -->
+      <div id="tabEtapas" class="detalhe-tab-content">
+        <div class="tab-actions">
+          <button id="btnAdicionarEtapa" class="btn-secondary">+ Etapa</button>
+          <button id="btnAdicionarTarefa" class="btn-secondary">+ Tarefa</button>
+        </div>
+        <div id="resumoResponsavel" class="resumo-responsavel"></div>
+        <div id="etapasEditorWrap" class="etapas-wrap editor-mode"></div>
+      </div>
+
+      <!-- Tab Logs -->
+      <div id="tabLogs" class="detalhe-tab-content hidden">
+        <div id="logsEditorWrap" class="logs-wrap">
+          <div class="loading-state"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- Tab Usuários -->
+      <div id="tabUsuarios" class="detalhe-tab-content hidden">
+        <div class="tab-actions">
+          <button id="btnAdicionarUsuario" class="btn-secondary">+ Usuário</button>
+        </div>
+        <div id="usuariosWrap" class="usuarios-wrap"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="rodape">Plataforma exclusiva Grupo Paleta</footer>
+
+  <!-- Modal: Novo cliente -->
+  <div id="modalNovoCliente" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Novo cliente</h2>
+        <button class="modal-close" onclick="fecharModal('modalNovoCliente')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Nome do cliente</label>
+          <input type="text" id="novoNome" placeholder="Ex: Restaurante Alma" />
+        </div>
+        <div class="field">
+          <label>Tipo</label>
+          <div class="tipo-select">
+            <button class="tipo-btn active" data-tipo="food">🍽 Paleta Food</button>
+            <button class="tipo-btn" data-tipo="mkt">📣 Paleta Mkt</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>E-mail de acesso</label>
+          <input type="email" id="novoEmail" placeholder="cliente@email.com" />
+        </div>
+        <div class="field">
+          <label>Senha inicial</label>
+          <input type="password" id="novaSenha" placeholder="Mínimo 6 caracteres" />
+        </div>
+        <div id="novoClienteError" class="error-msg hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="fecharModal('modalNovoCliente')">Cancelar</button>
+        <button class="btn-primary" id="btnCriarCliente">Criar cliente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nova etapa -->
+  <div id="modalNovaEtapa" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nova etapa</h2>
+        <button class="modal-close" onclick="fecharModal('modalNovaEtapa')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Nome</label>
+          <input type="text" id="novaEtapaNome" placeholder="Ex: Coleta de informações" />
+        </div>
+        <div class="field">
+          <label>Descrição <span style="color:var(--cinza-texto);font-weight:400">(opcional)</span></label>
+          <textarea id="novaEtapaDescricao" rows="2" placeholder="Descreva esta etapa..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="fecharModal('modalNovaEtapa')">Cancelar</button>
+        <button class="btn-primary" id="btnSalvarEtapa">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nova tarefa -->
+  <div id="modalNovaTarefa" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nova tarefa</h2>
+        <button class="modal-close" onclick="fecharModal('modalNovaTarefa')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Etapa</label>
+          <select id="novaTarefaEtapa"></select>
+        </div>
+        <div class="field">
+          <label>Nome da tarefa</label>
+          <input type="text" id="novaTarefaNome" placeholder="Ex: Enviar logins e senhas" />
+        </div>
+        <div class="field">
+          <label>Descrição <span style="color:var(--cinza-texto);font-weight:400">(opcional)</span></label>
+          <textarea id="novaTarefaDescricao" rows="2" placeholder="Instruções para o cliente..."></textarea>
+        </div>
+        <div class="field">
+          <label>Observação <span style="color:var(--cinza-texto);font-weight:400">(opcional)</span></label>
+          <textarea id="novaTarefaObservacao" rows="2" placeholder="Observação interna..."></textarea>
+        </div>
+        <div class="field">
+          <label>Responsável</label>
+          <div class="tipo-select">
+            <button class="tipo-btn active" data-resp="paleta">Paleta</button>
+            <button class="tipo-btn" data-resp="cliente">Cliente</button>
+            <button class="tipo-btn" data-resp="ambos">Ambos</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Data prevista <span style="color:var(--cinza-texto);font-weight:400">(opcional)</span></label>
+          <input type="date" id="novaTarefaData" />
+        </div>
+        <div class="field field-toggle">
+          <label>Visível para o cliente?</label>
+          <label class="toggle">
+            <input type="checkbox" id="novaTarefaVisivel" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="fecharModal('modalNovaTarefa')">Cancelar</button>
+        <button class="btn-primary" id="btnSalvarTarefa">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Novo usuário -->
+  <div id="modalNovoUsuario" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Novo usuário</h2>
+        <button class="modal-close" onclick="fecharModal('modalNovoUsuario')">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="section-sub" style="margin-bottom:16px">Acesso adicional ao onboarding deste cliente.</p>
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" id="novoUsuarioEmail" placeholder="usuario@email.com" />
+        </div>
+        <div class="field">
+          <label>Senha inicial</label>
+          <input type="password" id="novoUsuarioSenha" placeholder="Mínimo 6 caracteres" />
+        </div>
+        <div id="novoUsuarioError" class="error-msg hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="fecharModal('modalNovoUsuario')">Cancelar</button>
+        <button class="btn-primary" id="btnSalvarUsuario">Criar usuário</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/editor.js"></script>
+</body>
+</html>
